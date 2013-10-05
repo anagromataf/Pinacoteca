@@ -37,6 +37,23 @@
         }
         
         ];
+        
+        window.onload = function() {
+            
+          var ul = document.createElement('ul');
+          for (var i = 0; i < images.length; i++) {
+              var li = document.createElement('li');
+              var img = document.createElement('img');
+              var image = images[i];
+              img.src = image.url;
+              img.width = image.width;
+              img.height = image.height;
+              li.appendChild(img);
+              ul.appendChild(li);
+          };
+          document.body.appendChild(ul);
+        }
+        
         </script>
     </body>
 </html>
