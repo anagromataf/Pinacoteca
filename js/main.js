@@ -17,6 +17,8 @@ window.onload = function() {
                 img.style.left = '20px';
                 // img.style.width = '200px';
                 // img.style.height =  '200px';
+                
+                img.style.background = 'grey';
         };
         document.body.appendChild(gallery);
 };
