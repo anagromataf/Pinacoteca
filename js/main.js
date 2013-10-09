@@ -53,6 +53,7 @@ window.onload = function() {
             
             img.width = width;
             img.height = height;
+            img.src = rows[rowIdx][imgIdx].url;
             
             rowElement.appendChild(img);
         }
