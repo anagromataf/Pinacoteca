@@ -1,102 +1,32 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8">
-        <title>Pinacoteca</title>
-        <link rel="stylesheet" href="css/main.css">
-        
-    </head>
-    <body>
-        <script type="text/javascript">
-        
-        var images = [
-        {
-            url : "",
-            width : 320,
-            height : 214
-        },
-        
-        {
-            url : "",
-            width : 161,
-            height : 240
-        },
-        
-        {
-            url : "",
-            width : 320,
-            height : 214
-        },
-        
-        {
-            url : "",
-            width : 800,
-            height : 173
-        },
-        
-        {
-            url : "",
-            width: 400,
-            height: 300
-        },
-        
-        {
-            url : "",
-            width: 200,
-            height: 180
-        },
-        
-        {
-            url : "",
-            width: 450,
-            height: 500
-        },
-        
-        {
-            url : "",
-            width: 700,
-            height: 560
-        },
-        
-        {
-            url : "",
-            width: 320,
-            height: 240
-        },
-        
-        {
-            url : "",
-            width: 560,
-            height: 1024
-        },
-        
-        {
-            url : "",
-            width: 593,
-            height: 500
-        },
-        
-        {
-            url : "",
-            width: 400,
-            height: 400
-        },
-        
-        {
-            url : "",
-            width: 640,
-            height: 280
-        },
-        
-        {
-            url : "",
-            width: 320,
-            height: 240
-        }
-        
-        ];
-                
-        </script>
-        <script type="text/javascript" src="js/main.js"></script>
-    </body>
+<head>
+<meta charset="utf-8">
+<title>Pinacoteca</title>
+  <link rel="stylesheet" href="css/normalize.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <script type="text/x-handlebars">
+    {{outlet}}
+  </script>
+
+  <script type="text/x-handlebars" data-template-name="images">
+    <div>
+      {{#each image in model}}
+        <img {{bind-attr src=image.url}} />
+      {{/each}}
+    </div>
+  </script>
+  
+  <script src="js/libs/jquery-1.9.1.js"></script>
+  <script src="js/libs/handlebars-1.0.0.js"></script>
+  <script src="js/libs/ember-1.0.0.js"></script>
+  
+  <script src="js/application.js"></script>
+  <script src="js/router.js"></script>
+  <script src="js/model/image.js"></script>
+
+</body>
 </html>
