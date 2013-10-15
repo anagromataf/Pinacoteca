@@ -11,22 +11,29 @@
   <script type="text/x-handlebars">
     {{outlet}}
   </script>
-
-  <script type="text/x-handlebars" data-template-name="images">
-    <div>
-      {{#each image in model}}
-        <img {{bind-attr src=image.url}} />
-      {{/each}}
-    </div>
+  
+  <script type="text/x-handlebars" data-template-name="stream">
+    {{#each image in model}}
+      <img {{bind-attr src=image.url}} />
+    {{/each}}
   </script>
   
+  <!-- Libraries -->
   <script src="js/libs/jquery-1.9.1.js"></script>
   <script src="js/libs/handlebars-1.0.0.js"></script>
   <script src="js/libs/ember-1.0.0.js"></script>
   
+  <!-- Application -->
   <script src="js/application.js"></script>
   <script src="js/router.js"></script>
-  <script src="js/model/image.js"></script>
-
+  
+  <!-- Model -->
+  <script src="js/model/cluster.js"></script>
+  <script src="js/model/item.js"></script>
+  <script src="js/model/image.js"></script>  
+  
+  <!-- Fixtures -->
+  <script src="js/fixtures.js"></script>
 </body>
 </html>
+

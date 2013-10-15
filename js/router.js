@@ -1,9 +1,9 @@
 App.Router.map(function () {
-  this.resource('images', { path: '/' });
+  this.resource('stream', { path: '/' });
 });
 
-App.ImagesRoute = Ember.Route.extend({
+App.StreamRoute = Ember.Route.extend({
   model: function () {
-    return App.Image.FIXTURE;
+    return App.Item.all();
   }
 });
