@@ -13,9 +13,11 @@
   </script>
   
   <script type="text/x-handlebars" data-template-name="stream">
-    {{#each image in model}}
-      <img {{bind-attr src=image.url}} />
-    {{/each}}
+    {{view App.ImagesView contentBinding="content"}}
+  </script>
+  
+  <script type="text/x-handlebars" data-template-name="image">
+    <img {{bind-attr src=view.content.url}}>
   </script>
   
   <!-- Libraries -->
@@ -30,7 +32,11 @@
   <!-- Model -->
   <script src="js/model/cluster.js"></script>
   <script src="js/model/item.js"></script>
-  <script src="js/model/image.js"></script>  
+  <script src="js/model/image.js"></script>
+  
+  <!-- Views -->
+  <script src="js/views/image.js"></script>
+  <script src="js/views/stream.js"></script>
   
   <!-- Fixtures -->
   <script src="js/fixtures.js"></script>
