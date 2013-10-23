@@ -4,9 +4,20 @@ App.ImagesView = Ember.CollectionView.extend({
     itemViewClass: 'App.ImageView',
     
     childViewsDidChange: function(views, start, removed, the) {
+      this.updateGrid();
+    },
+    
+    updateGrid: function () {
       this.get('childViews').forEach(function(view) {
         view.set('width', 100);
         view.set('height', 100);
+      });
+    },
+    
+    didInsertElement: function(){
+      var collection = this;
+      $(window).resize(function(){
+        collection.updateGrid();
       });
     }
 });
