@@ -2,3 +2,10 @@
 html, body {
     margin: 20px;
 }
+
+.image {
+   background-position: center;
+   background-size: cover;
+   
+   float: left;
+}
