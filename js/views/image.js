@@ -22,32 +22,46 @@ App.ImagesView = Ember.CollectionView.extend({
         
         var currentRow = new Array();
         
-        var views = this.get('childViews');
-        for (var i = 0; i < views.length; i++) {
-          var view = views[i];
-          
-          currentRow.push(view);
-          
+        aspectRatioOfRow = function (currentRow) {
           var rowAspectRatio = 0;
           for (var x = 0; x < currentRow.length; x++) {
             rowAspectRatio += currentRow[x].content.get('aspectRatio');
           }
-          
+          return rowAspectRatio;
+        };
+        
+        flushRow = function (rowAspectRatio) {
           var rowHeight = collectionWidth / rowAspectRatio;
-          if (rowHeight < 200) {
-            
-             for (var z = 0; z < currentRow.length; z++) {
-               var aspectRatio = currentRow[z].content.get('aspectRatio');
-               
-               var width = aspectRatio * collectionWidth / rowAspectRatio;
-               var height = width / aspectRatio;
-               
-               currentRow[z].set('width', width);
-               currentRow[z].set('height', height);
-             }
-             
-             currentRow = new Array();
+        
+          for (var z = 0; z < currentRow.length; z++) {
+             var aspectRatio = currentRow[z].content.get('aspectRatio');
+           
+             var width = aspectRatio * collectionWidth / rowAspectRatio;
+             var height = width / aspectRatio;
+           
+             currentRow[z].set('width', width);
+             currentRow[z].set('height', height);
+           }
+           
+           currentRow = new Array();
+        };
+        
+        var views = this.get('childViews');
+        for (var i = 0; i < views.length; i++) {
+          var view = views[i];
+          
+          if (currentRow.length > 0) {            
+            var rowAspectRatio = aspectRatioOfRow(currentRow);
+            if (collectionWidth / (rowAspectRatio + view.content.get('aspectRatio')) < 180) {
+              flushRow(rowAspectRatio);
+            }
           }
+          currentRow.push(view);
+        }
+        
+        if (currentRow.length > 0) {
+          var rowAspectRatio = aspectRatioOfRow(currentRow);
+          flushRow(rowAspectRatio);
         }
       }
     }
