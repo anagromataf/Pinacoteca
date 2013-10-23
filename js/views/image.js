@@ -16,24 +16,42 @@ App.ImagesView = Ember.CollectionView.extend({
     },
     
     updateGrid: function() {
-      var collection = this.$();
-      if (collection) {
+      if (this.$()) {
+        
         var collectionWidth = this.$().width();
+        
+        var currentRow = new Array();
+        
         var views = this.get('childViews');
         for (var i = 0; i < views.length; i++) {
           var view = views[i];
           
-          var aspectRatio = view.content.get('aspectRatio');
-          var width = collectionWidth;
-          var height = collectionWidth / aspectRatio;
+          currentRow.push(view);
           
-          view.set('width', width);
-          view.set('height', height);
+          var rowAspectRatio = 0;
+          for (var x = 0; x < currentRow.length; x++) {
+            rowAspectRatio += currentRow[x].content.get('aspectRatio');
+          }
+          
+          var rowHeight = collectionWidth / rowAspectRatio;
+          if (rowHeight < 200) {
+            
+             for (var z = 0; z < currentRow.length; z++) {
+               var aspectRatio = currentRow[z].content.get('aspectRatio');
+               
+               var width = aspectRatio * collectionWidth / rowAspectRatio;
+               var height = width / aspectRatio;
+               
+               currentRow[z].set('width', width);
+               currentRow[z].set('height', height);
+             }
+             
+             currentRow = new Array();
+          }
         }
       }
     }
 });
-
 
 App.ImageView = Ember.View.extend({
   templateName: "image",
@@ -52,8 +70,6 @@ App.ImageView = Ember.View.extend({
   }.observes('height'),
   
   didInsertElement: function(){
-    this.$().css('width', this.get('width'));
-    this.$().css('height', this.get('height'));
     this.$().css('background-image', 'url(' + this.content.get('url') + ')');
   }
 });
