@@ -35,24 +35,26 @@ App.ImagesView = Ember.CollectionView.extend({
         };
         
         flushRow = function (rowAspectRatio) {
-          var rowHeight = collectionWidth / rowAspectRatio;
+          var rowHeight = Math.round(collectionWidth / rowAspectRatio);
           
           var offsetX = 0;
           
           for (var z = 0; z < currentRow.length; z++) {   
-             
-             var aspectRatio = currentRow[z].content.get('aspectRatio');
-             
-             var width = aspectRatio * collectionWidth / rowAspectRatio;
-             var height = width / aspectRatio;
+            var width = 0;
+            if (z == currentRow.length - 1) {
+              width = collectionWidth - offsetX;
+            } else {
+              var aspectRatio = currentRow[z].content.get('aspectRatio');
+              width = Math.round(aspectRatio * collectionWidth / rowAspectRatio);
+            }
+            
+            currentRow[z].set('width', width);
+            currentRow[z].set('height', rowHeight);
            
-             currentRow[z].set('width', width);
-             currentRow[z].set('height', height);
-             
-             currentRow[z].set('offsetX', offsetX);
-             currentRow[z].set('offsetY', offsetY);
-             
-             offsetX += width;
+            currentRow[z].set('offsetX', offsetX);
+            currentRow[z].set('offsetY', offsetY);
+           
+            offsetX += width;
            }
            
            currentRow = new Array();
