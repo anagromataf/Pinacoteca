@@ -20,9 +20,11 @@ App.ImagesView = Ember.CollectionView.extend({
     updateGrid: function() {
       if (this.$()) {
         
+        var margin = 10;
+        
         var collectionWidth = this.$().width();
         
-        var offsetY = 0;
+        var offsetY = margin;
         
         var currentRow = new Array();
         
@@ -35,31 +37,34 @@ App.ImagesView = Ember.CollectionView.extend({
         };
         
         flushRow = function (rowAspectRatio) {
-          var rowHeight = Math.round(collectionWidth / rowAspectRatio);
           
-          var offsetX = 0;
+          var _width = collectionWidth - margin;
+          
+          var rowHeight = Math.round(_width / rowAspectRatio);
+          
+          var offsetX = margin;
           
           for (var z = 0; z < currentRow.length; z++) {   
             var width = 0;
             if (z == currentRow.length - 1) {
-              width = collectionWidth - offsetX;
+              width = _width - offsetX;
             } else {
               var aspectRatio = currentRow[z].content.get('aspectRatio');
-              width = Math.round(aspectRatio * collectionWidth / rowAspectRatio);
+              width = Math.round(aspectRatio * (_width - margin) / rowAspectRatio);
             }
             
             currentRow[z].set('width', width);
             currentRow[z].set('height', rowHeight);
-           
+            
             currentRow[z].set('offsetX', offsetX);
             currentRow[z].set('offsetY', offsetY);
            
-            offsetX += width;
+            offsetX += width + margin;
            }
            
            currentRow = new Array();
            
-           offsetY += rowHeight;
+           offsetY += rowHeight + margin;
         };
         
         var views = this.get('childViews');
