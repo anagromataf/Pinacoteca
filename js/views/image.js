@@ -79,6 +79,8 @@ App.ImagesView = Ember.CollectionView.extend({
           var rowAspectRatio = aspectRatioOfRow(currentRow);
           flushRow(rowAspectRatio);
         }
+        
+        this.$().css('height', offsetY); 
       }
     }
 });
