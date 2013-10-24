@@ -8,6 +8,8 @@ App.ImagesView = Ember.CollectionView.extend({
     },
     
     didInsertElement: function(){
+      this.$().css('position', 'relative');
+      
       var collection = this;
       $(window).resize(function(){
         collection.updateGrid();
@@ -19,6 +21,8 @@ App.ImagesView = Ember.CollectionView.extend({
       if (this.$()) {
         
         var collectionWidth = this.$().width();
+        
+        var offsetY = 0;
         
         var currentRow = new Array();
         
@@ -32,18 +36,28 @@ App.ImagesView = Ember.CollectionView.extend({
         
         flushRow = function (rowAspectRatio) {
           var rowHeight = collectionWidth / rowAspectRatio;
-        
-          for (var z = 0; z < currentRow.length; z++) {
+          
+          var offsetX = 0;
+          
+          for (var z = 0; z < currentRow.length; z++) {   
+             
              var aspectRatio = currentRow[z].content.get('aspectRatio');
-           
+             
              var width = aspectRatio * collectionWidth / rowAspectRatio;
              var height = width / aspectRatio;
            
              currentRow[z].set('width', width);
              currentRow[z].set('height', height);
+             
+             currentRow[z].set('offsetX', offsetX);
+             currentRow[z].set('offsetY', offsetY);
+             
+             offsetX += width;
            }
            
            currentRow = new Array();
+           
+           offsetY += rowHeight;
         };
         
         var views = this.get('childViews');
@@ -74,16 +88,27 @@ App.ImageView = Ember.View.extend({
   
   width: 0,
   height: 0,
+  offsetX: 0,
+  offsetY: 0,
   
   widthObserver: function() {
-      this.$().css('width', this.get('width'));
+    this.$().css('width', this.get('width'));
   }.observes('width'),
   
   heightObserver: function() {
-      this.$().css('height', this.get('height'));
+    this.$().css('height', this.get('height'));
   }.observes('height'),
   
+  offsetXObserver: function () {
+    this.$().css('left', this.get('offsetX'));
+  }.observes('offsetX'),
+  
+  offsetYObserver: function () {
+    this.$().css('top', this.get('offsetY'));
+  }.observes('offsetY'),
+  
   didInsertElement: function(){
+    this.$().css('position', 'absolute');
     this.$().css('background-image', 'url(' + this.content.get('url') + ')');
   }
 });
