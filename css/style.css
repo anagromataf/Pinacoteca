@@ -4,9 +4,13 @@ html, body {
     background: black;
 }
 
+.item {
+  background-position: center;
+  background-size: cover;
+}
+
 .image {
-   background-position: center;
-   background-size: cover;
+  background-color: gray;
 }
 
 .audio {
