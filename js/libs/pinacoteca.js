@@ -10,7 +10,11 @@ Pinacoteca.View = Ember.Namespace.create({});
 
 Pinacoteca.Model.Item = Ember.Object.extend({
   mimeType: null,
-  created: null
+  created: null,
+  url: null,
+  backgroundImage: function() {
+    return undefined;
+  }
 });
 
 Pinacoteca.Model.Item.reopenClass({
@@ -36,24 +40,26 @@ Pinacoteca.Model.Playable = Ember.Mixin.create({
 // Image
 
 Pinacoteca.Model.Image = Pinacoteca.Model.Item.extend(Pinacoteca.Model.Viewable, {
-
+  backgroundImage: function() {
+    return this.get('url');
+  }.property('url')
 });
 
 // Audio
 
 Pinacoteca.Model.Audio = Pinacoteca.Model.Item.extend(Pinacoteca.Model.Playable, {
-
 });
 
 // Video
 
 Pinacoteca.Model.Video = Pinacoteca.Model.Item.extend(Pinacoteca.Model.Viewable, Pinacoteca.Model.Playable, {
-
 });
 
 // --------------------------
 // Views
 // --------------------------
+
+// Collection
 
 Pinacoteca.View.Items = Ember.CollectionView.extend({
   classNames: ['pinacoteca'],
@@ -169,6 +175,8 @@ Pinacoteca.View.Items = Ember.CollectionView.extend({
   }.observes('maxAspectRatio').observes('margin')
 });
 
+// Items
+
 Pinacoteca.View.Item = Ember.View.extend({
   classNames: ['pinacoteca', 'item'],
 
@@ -192,19 +200,20 @@ Pinacoteca.View.Item = Ember.View.extend({
   offsetYObserver: function() {
     this.$().css('top', this.get('offsetY'));
   }.observes('offsetY'),
-
+  
   didInsertElement: function() {
     this.$().css('position', 'absolute');
+    backgroundImage = this.content.get('backgroundImage');
+    if (backgroundImage) {
+      this.$().css('background-image', 'url(' + backgroundImage + ')');
+    } else {
+      this.$().css('background-image', 'none');
+    }
   }
 });
 
 Pinacoteca.View.Image = Pinacoteca.View.Item.extend({
   classNames: ['pinacoteca', 'image'],
-
-  didInsertElement: function() {
-    this._super();
-    this.$().css('background-image', 'url(' + this.content.get('url') + ')');
-  }
 });
 
 Pinacoteca.View.Audio = Pinacoteca.View.Item.extend({
