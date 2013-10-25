@@ -2,8 +2,11 @@ Pinacoteca = Ember.Namespace.create({});
 Pinacoteca.Model = Ember.Namespace.create({});
 Pinacoteca.View = Ember.Namespace.create({});
 
+// --------------------------
 // Model
 // --------------------------
+
+// Item
 
 Pinacoteca.Model.Item = Ember.Object.extend({
   mimeType: null,
@@ -16,18 +19,39 @@ Pinacoteca.Model.Item.reopenClass({
   }
 });
 
-Pinacoteca.Model.Image = Pinacoteca.Model.Item.extend({
-  
+// Mix Ins
+
+Pinacoteca.Model.Viewable = Ember.Mixin.create({
   width: null,
   height: null,
-  url: "images/default.jpg",
-  
   aspectRatio: function() {
     return this.get('width') / this.get('height');     
   }.property('width', 'height')
+});
+
+Pinacoteca.Model.Playable = Ember.Mixin.create({
+  duration: null
+});
+
+// Image
+
+Pinacoteca.Model.Image = Pinacoteca.Model.Item.extend(Pinacoteca.Model.Viewable, {
   
 });
 
+// Audio
+
+Pinacoteca.Model.Audio = Pinacoteca.Model.Item.extend(Pinacoteca.Model.Playable, {
+  
+});
+
+// Video
+
+Pinacoteca.Model.Video = Pinacoteca.Model.Item.extend(Pinacoteca.Model.Viewable, Pinacoteca.Model.Playable, {
+  
+});
+
+// --------------------------
 // Views
 // --------------------------
 
