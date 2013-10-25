@@ -4,6 +4,6 @@ App.Router.map(function () {
 
 App.StreamRoute = Ember.Route.extend({
   model: function () {
-    return App.Item.all();
+    return Pinacoteca.Model.Item.all();
   }
 });

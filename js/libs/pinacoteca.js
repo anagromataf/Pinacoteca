@@ -1,6 +1,39 @@
-App.ImagesView = Ember.CollectionView.extend({
+Pinacoteca = Ember.Namespace.create({});
+Pinacoteca.Model = Ember.Namespace.create({});
+Pinacoteca.View = Ember.Namespace.create({});
+
+// Model
+// --------------------------
+
+Pinacoteca.Model.Item = Ember.Object.extend({
+  mimeType: null,
+  created: null
+});
+
+Pinacoteca.Model.Item.reopenClass({  
+  all: function () {
+    return Pinacoteca.Model.Item.DATA;
+  }
+});
+
+Pinacoteca.Model.Image = Pinacoteca.Model.Item.extend({
+  
+  width: null,
+  height: null,
+  url: "images/default.jpg",
+  
+  aspectRatio: function() {
+    return this.get('width') / this.get('height');     
+  }.property('width', 'height')
+  
+});
+
+// Views
+// --------------------------
+
+Pinacoteca.View.Images = Ember.CollectionView.extend({
   tagName: 'div',
-  itemViewClass: 'App.ImageView',
+  itemViewClass: 'Pinacoteca.View.Image',
 
   margin: 10,
   maxAspectRatio: 2.5,
@@ -90,9 +123,7 @@ App.ImagesView = Ember.CollectionView.extend({
   }.observes('maxAspectRatio').observes('margin')
 });
 
-App.ImageView = Ember.View.extend({
-  templateName: "image",
-
+Pinacoteca.View.Image = Ember.View.extend({
   classNames: ['image'],
 
   width: 0,
