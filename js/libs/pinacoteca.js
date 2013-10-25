@@ -55,7 +55,7 @@ Pinacoteca.Model.Video = Pinacoteca.Model.Item.extend(Pinacoteca.Model.Viewable,
 // Views
 // --------------------------
 
-Pinacoteca.View.Images = Ember.CollectionView.extend({
+Pinacoteca.View.Items = Ember.CollectionView.extend({
   classNames: ['pinacoteca'],
 
   tagName: 'div',
