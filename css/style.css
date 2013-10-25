@@ -8,3 +8,11 @@ html, body {
    background-position: center;
    background-size: cover;
 }
+
+.audio {
+  background-color: green;
+}
+
+.video {
+  background-color: red;
+}

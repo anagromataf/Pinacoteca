@@ -13,8 +13,8 @@ Pinacoteca.Model.Item = Ember.Object.extend({
   created: null
 });
 
-Pinacoteca.Model.Item.reopenClass({  
-  all: function () {
+Pinacoteca.Model.Item.reopenClass({
+  all: function() {
     return Pinacoteca.Model.Item.DATA;
   }
 });
@@ -25,7 +25,7 @@ Pinacoteca.Model.Viewable = Ember.Mixin.create({
   width: null,
   height: null,
   aspectRatio: function() {
-    return this.get('width') / this.get('height');     
+    return this.get('width') / this.get('height');
   }.property('width', 'height')
 });
 
@@ -36,19 +36,19 @@ Pinacoteca.Model.Playable = Ember.Mixin.create({
 // Image
 
 Pinacoteca.Model.Image = Pinacoteca.Model.Item.extend(Pinacoteca.Model.Viewable, {
-  
+
 });
 
 // Audio
 
 Pinacoteca.Model.Audio = Pinacoteca.Model.Item.extend(Pinacoteca.Model.Playable, {
-  
+
 });
 
 // Video
 
 Pinacoteca.Model.Video = Pinacoteca.Model.Item.extend(Pinacoteca.Model.Viewable, Pinacoteca.Model.Playable, {
-  
+
 });
 
 // --------------------------
@@ -56,12 +56,14 @@ Pinacoteca.Model.Video = Pinacoteca.Model.Item.extend(Pinacoteca.Model.Viewable,
 // --------------------------
 
 Pinacoteca.View.Images = Ember.CollectionView.extend({
+  classNames: ['pinacoteca'],
+
   tagName: 'div',
-  itemViewClass: 'Pinacoteca.View.Image',
+  itemViewClass: 'Pinacoteca.View.Item',
 
   margin: 10,
   maxAspectRatio: 2.5,
-  
+
   childViewsDidChange: function(views, start, removed, the) {
     this.updateGrid();
   },
@@ -76,38 +78,58 @@ Pinacoteca.View.Images = Ember.CollectionView.extend({
     collection.updateGrid();
   },
 
+  createChildView: function(viewClass, attrs) {
+    if (attrs.content.get('mimeType') == 'image/jpeg') {
+      viewClass = Pinacoteca.View.Image;
+    } else if (attrs.content.get('mimeType') == 'audio/mp3') {
+      viewClass = Pinacoteca.View.Audio;
+    } else if (attrs.content.get('mimeType') == 'video/mp4') {
+      viewClass = Pinacoteca.View.Video;
+    }
+    return this._super(viewClass, attrs);
+  },
+
   updateGrid: function() {
     if (this.$()) {
 
       var margin = this.get('margin');
       var maxAspectRatio = this.get('maxAspectRatio');
       var minAspectRatio = 1 / maxAspectRatio;
-      
+
       var collectionWidth = this.$().width();
-      
+
       var currentRow = new Array();
       var offsetY = margin;
+
+      aspectRatioOfView = function (view) {
+        var ar =  view.content.get('aspectRatio')
+        if (ar == undefined) {
+          return 1;
+        } else {
+          return Math.max(minAspectRatio, Math.min(maxAspectRatio, ar));;
+        }
+      };
       
       aspectRatioOfRow = function(currentRow) {
         var rowAspectRatio = 0;
         for (var x = 0; x < currentRow.length; x++) {
-          rowAspectRatio += Math.max(minAspectRatio, Math.min(maxAspectRatio, currentRow[x].content.get('aspectRatio')));
+          rowAspectRatio += aspectRatioOfView(currentRow[x]);
         }
         return rowAspectRatio;
       };
-      
+
       flushRow = function(rowAspectRatio) {
-        
+
         var _collectionWidth = collectionWidth;
         var rowHeight = Math.round(_collectionWidth / rowAspectRatio);
         var offsetX = margin;
-        
+
         for (var z = 0; z < currentRow.length; z++) {
           var width = 0;
           if (z == currentRow.length - 1) {
             width = _collectionWidth - offsetX;
           } else {
-            var aspectRatio = Math.max(minAspectRatio, Math.min(maxAspectRatio, currentRow[z].content.get('aspectRatio')));
+            var aspectRatio = aspectRatioOfView(currentRow[z]);
             width = Math.round(aspectRatio * (_collectionWidth - margin) / rowAspectRatio);
           }
           width -= margin;
@@ -130,7 +152,7 @@ Pinacoteca.View.Images = Ember.CollectionView.extend({
 
         if (currentRow.length > 0) {
           var rowAspectRatio = aspectRatioOfRow(currentRow);
-          if (collectionWidth / (rowAspectRatio + Math.max(minAspectRatio, Math.min(maxAspectRatio, view.content.get('aspectRatio')))) < 180) {
+          if (collectionWidth / (rowAspectRatio + aspectRatioOfView(view)) < 180) {
             flushRow(rowAspectRatio);
           }
         }
@@ -147,8 +169,8 @@ Pinacoteca.View.Images = Ember.CollectionView.extend({
   }.observes('maxAspectRatio').observes('margin')
 });
 
-Pinacoteca.View.Image = Ember.View.extend({
-  classNames: ['image'],
+Pinacoteca.View.Item = Ember.View.extend({
+  classNames: ['pinacoteca', 'item'],
 
   width: 0,
   height: 0,
@@ -173,6 +195,22 @@ Pinacoteca.View.Image = Ember.View.extend({
 
   didInsertElement: function() {
     this.$().css('position', 'absolute');
+  }
+});
+
+Pinacoteca.View.Image = Pinacoteca.View.Item.extend({
+  classNames: ['pinacoteca', 'image'],
+
+  didInsertElement: function() {
+    this._super();
     this.$().css('background-image', 'url(' + this.content.get('url') + ')');
   }
+});
+
+Pinacoteca.View.Audio = Pinacoteca.View.Item.extend({
+    classNames: ['pinacoteca', 'audio']
+});
+
+Pinacoteca.View.Video = Pinacoteca.View.Item.extend({
+    classNames: ['pinacoteca', 'video']
 });
