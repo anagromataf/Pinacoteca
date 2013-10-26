@@ -1,0 +1,22 @@
+/* Put your CSS here */
+html, body {
+    margin: 0;
+    background: black;
+}
+
+.item {
+  background-position: center;
+  background-size: cover;
+}
+
+.image {
+  background-color: gray;
+}
+
+.audio {
+  background-color: green;
+}
+
+.video {
+  background-color: red;
+}
